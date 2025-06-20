@@ -1,0 +1,4 @@
+[console_scripts]
+rrce-analyze = rrce_framework.cli:analyze
+rrce-collect-data = rrce_framework.cli:collect_data
+rrce-run-simulation = rrce_framework.cli:run_simulation

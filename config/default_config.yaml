@@ -1,0 +1,119 @@
+# RRCE Framework Default Configuration
+# ===================================
+
+# Project settings
+project:
+  name: "RRCE Framework"
+  version: "0.1.0"
+  description: "Resource-Reality Coupled Economics Framework"
+
+# Data collection settings
+data:
+  # Time period for data collection
+  default_start_date: "2000-01-01"
+  default_end_date: "2023-12-31"
+  
+  # Data sources configuration
+  sources:
+    world_bank:
+      enabled: true
+      rate_limit: 100  # requests per minute
+    fred:
+      enabled: true
+      rate_limit: 120
+    oecd:
+      enabled: false
+      rate_limit: 60
+  
+  # Caching configuration
+  cache:
+    enabled: true
+    expiry_days: 7
+    max_size_mb: 1000
+  
+  # Data quality thresholds
+  quality:
+    min_completeness: 0.6  # 60% of data points must be available
+    min_temporal_coverage: 0.8  # 80% of time period must be covered
+
+# Simulation settings
+simulation:
+  # Time step configuration
+  time_step: 0.25  # quarterly steps
+  max_iterations: 1000
+  convergence_tolerance: 1e-6
+  
+  # Numerical solver settings
+  solver:
+    method: "runge_kutta"
+    adaptive_step: true
+    max_step_size: 1.0
+    min_step_size: 0.01
+
+# Model parameters
+model:
+  # Resource dynamics parameters
+  resources:
+    energy:
+      kappa: 2.0
+      eta: 3.0
+      decay_rate: 0.05
+    agricultural:
+      kappa: 1.5
+      eta: 2.5
+      decay_rate: 0.03
+    mineral:
+      kappa: 3.0
+      eta: 4.0
+      decay_rate: 0.02
+  
+  # Social stability parameters
+  social:
+    gini_max: 0.6  # Maximum sustainable Gini coefficient
+    inequality_sensitivity: 2.0
+    essential_goods_weight: 0.3
+  
+  # System parameters
+  system:
+    leverage_ratio: 1.5  # Maximum leverage (alpha parameter)
+    elasticity_base: 0.1  # Base monetary elasticity (gamma_0)
+    elasticity_resource: 0.2  # Resource stress elasticity (gamma_1)
+    elasticity_speculation: 0.3  # Speculation elasticity (gamma_2)
+
+# Analysis settings
+analysis:
+  # Comparison models
+  conventional_models:
+    - "dsge"
+    - "var"
+    - "arima"
+  
+  # Metrics to compute
+  metrics:
+    - "rmse"
+    - "mae"
+    - "mape"
+    - "directional_accuracy"
+    - "constraint_violation_rate"
+  
+  # Validation settings
+  validation:
+    train_test_split: 0.8
+    cross_validation_folds: 5
+    bootstrap_samples: 1000
+
+# Logging configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/rrce_framework.log"
+  max_file_size_mb: 10
+  backup_count: 5
+
+# Visualization settings
+visualization:
+  default_theme: "plotly_white"
+  figure_size: [12, 8]
+  dpi: 300
+  save_format: "png"
+  interactive: true

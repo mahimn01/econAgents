@@ -1,0 +1,76 @@
+# Data Sources Configuration
+# =========================
+
+# World Bank indicators mapping
+world_bank:
+  economic:
+    gdp: "NY.GDP.MKTP.CD"
+    gdp_per_capita: "NY.GDP.PCAP.CD"
+    inflation: "FP.CPI.TOTL.ZG"
+    unemployment: "SL.UEM.TOTL.ZS"
+    trade_openness: "NE.TRD.GNFS.ZS"
+    debt_to_gdp: "GC.DOD.TOTL.GD.ZS"
+    fdi_inflows: "BX.KLT.DINV.CD.WD"
+    
+  resource:
+    energy_use_per_capita: "EG.USE.PCAP.KG.OE"
+    fossil_fuel_consumption: "EG.USE.COMM.FO.ZS"
+    renewable_electricity: "EG.ELC.RNEW.ZS"
+    energy_imports: "EG.IMP.CONS.ZS"
+    arable_land_per_capita: "AG.LND.ARBL.HA.PC"
+    forest_area: "AG.LND.FRST.ZS"
+    freshwater_withdrawal: "ER.H2O.FWTL.K3"
+    
+  environmental:
+    co2_emissions_per_capita: "EN.ATM.CO2E.PC"
+    co2_emissions_total: "EN.ATM.CO2E.KT"
+    methane_emissions: "EN.ATM.METH.KT.CE"
+    nitrous_oxide_emissions: "EN.ATM.NOXE.KT.CE"
+    
+  social:
+    gini_coefficient: "SI.POV.GINI"
+    poverty_headcount_national: "SI.POV.NAHC"
+    poverty_headcount_190: "SI.POV.DDAY"
+    gni_per_capita_ppp: "NY.GNP.PCAP.PP.CD"
+
+# FRED indicators (US Federal Reserve)
+fred:
+  economic:
+    gdp: "GDP"
+    cpi: "CPIAUCSL"
+    unemployment_rate: "UNRATE"
+    fed_funds_rate: "FEDFUNDS"
+    treasury_10y: "DGS10"
+    
+  financial:
+    sp500: "SP500"
+    vix: "VIXCLS"
+    dollar_index: "DTWEXBGS"
+    
+  commodity:
+    oil_price: "DCOILWTICO"
+    gold_price: "GOLDAMGBD228NLBM"
+
+# OECD indicators
+oecd:
+  economic:
+    gdp_growth: "GDP_GROWTH"
+    productivity: "PRODUCTIVITY"
+    
+  social:
+    inequality: "INEQUALITY"
+    education: "EDUCATION"
+
+# Alternative data sources
+alternative:
+  # For countries with limited World Bank coverage
+  imf:
+    base_url: "http://dataservices.imf.org/REST/SDMX_JSON.svc/"
+    
+  national_statistics:
+    # Country-specific statistical office APIs
+    enabled: false
+    
+  private_sources:
+    # Commercial data providers
+    enabled: false

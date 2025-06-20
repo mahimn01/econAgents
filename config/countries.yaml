@@ -1,0 +1,100 @@
+# Country Configuration for RRCE Framework
+# ========================================
+
+# Major economies for comprehensive analysis
+major_economies:
+  - code: "US"
+    name: "United States"
+    wb_code: "USA"
+    fred_available: true
+    priority: 1
+    
+  - code: "CN"
+    name: "China"
+    wb_code: "CHN"
+    fred_available: false
+    priority: 1
+    
+  - code: "DE"
+    name: "Germany"
+    wb_code: "DEU"
+    fred_available: false
+    priority: 1
+    
+  - code: "JP"
+    name: "Japan"
+    wb_code: "JPN"
+    fred_available: false
+    priority: 1
+    
+  - code: "GB"
+    name: "United Kingdom"
+    wb_code: "GBR"
+    fred_available: false
+    priority: 1
+
+# Secondary economies for validation
+secondary_economies:
+  - code: "FR"
+    name: "France"
+    wb_code: "FRA"
+    priority: 2
+    
+  - code: "IN"
+    name: "India"
+    wb_code: "IND"
+    priority: 2
+    
+  - code: "IT"
+    name: "Italy"
+    wb_code: "ITA"
+    priority: 2
+    
+  - code: "BR"
+    name: "Brazil"
+    wb_code: "BRA"
+    priority: 2
+    
+  - code: "CA"
+    name: "Canada"
+    wb_code: "CAN"
+    priority: 2
+
+# Constraint regime examples
+constraint_regimes:
+  # Highly constrained (resource-limited)
+  high_constraint:
+    - "SG"  # Singapore
+    - "JP"  # Japan
+    - "IS"  # Iceland
+    
+  # Moderately constrained
+  medium_constraint:
+    - "DE"  # Germany
+    - "GB"  # United Kingdom
+    - "FR"  # France
+    
+  # Lightly constrained (resource-abundant)
+  low_constraint:
+    - "US"  # United States
+    - "CA"  # Canada
+    - "AU"  # Australia
+    - "RU"  # Russia
+
+# Country-specific settings
+country_settings:
+  US:
+    fred_series:
+      - "GDP"
+      - "CPIAUCSL"
+      - "UNRATE"
+      - "FEDFUNDS"
+    special_handling: true
+    
+  CN:
+    data_sources: ["world_bank", "oecd"]
+    currency_handling: "special"  # Due to managed exchange rate
+    
+  DE:
+    eurozone_member: true
+    ecb_data_available: true
