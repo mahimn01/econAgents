@@ -1,0 +1,110 @@
+# RRCE Framework Default Configuration
+
+# Data collection configuration
+data:
+  default_start_date: "2000-01-01"
+  default_end_date: "2023-12-31"
+  sources:
+    fred:
+      enabled: true
+      rate_limit: 120  # requests per minute
+    world_bank:
+      enabled: true
+      rate_limit: 120
+  cache:
+    enabled: true
+    ttl_hours: 24
+  quality:
+    min_completeness: 0.7
+    min_temporal_coverage: 0.8
+
+# Simulation configuration
+simulation:
+  time_step: 0.25  # quarterly
+  max_iterations: 1000
+  convergence_tolerance: 1e-6
+  solver:
+    method: "runge_kutta"
+    adaptive_step: true
+
+# Model parameters
+model:
+  resources:
+    energy:
+      regeneration_rate: 0.05
+      degradation_rate: 0.02
+      carrying_capacity: 1000.0
+      critical_threshold: 200.0
+      extraction_efficiency: 0.8
+    agricultural:
+      regeneration_rate: 0.08
+      degradation_rate: 0.01
+      carrying_capacity: 800.0
+      critical_threshold: 160.0
+      extraction_efficiency: 0.75
+    mineral:
+      regeneration_rate: 0.01
+      degradation_rate: 0.005
+      carrying_capacity: 500.0
+      critical_threshold: 100.0
+      extraction_efficiency: 0.6
+  
+  pricing:
+    energy:
+      kappa: 2.0
+      eta: 3.0
+      delta: 1.0
+      beta: 0.5
+    agricultural:
+      kappa: 1.5
+      eta: 2.5
+      delta: 0.8
+      beta: 0.7
+    mineral:
+      kappa: 3.0
+      eta: 4.0
+      delta: 1.2
+      beta: 0.3
+  
+  currency:
+    base_value: 1.0
+    backing_ratio: 0.6
+    stability_factor: 0.8
+  
+  equilibrium:
+    convergence_threshold: 1e-6
+    max_iterations: 100
+    damping_factor: 0.5
+
+# Analysis configuration
+analysis:
+  conventional_models: ["dsge", "var"]
+  metrics: ["rmse", "mae", "mape"]
+  validation:
+    cross_validation: true
+    test_size: 0.2
+
+# Visualization configuration
+visualization:
+  default_theme: "plotly_white"
+  figure_size: [12, 8]
+  dpi: 300
+  save_format: "png"
+  interactive: true
+
+# Logging configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/rrce_framework.log"
+  max_file_size_mb: 10
+  backup_count: 5
+
+# Default countries for analysis
+countries: ["US", "DE", "CN"]
+
+# Data directory
+data_dir: "./data"
+
+# Results directory
+results_dir: "./results"

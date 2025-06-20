@@ -8,8 +8,9 @@ from typing import Dict, List, Optional, Any, Callable
 import logging
 from datetime import datetime, timedelta
 
-from ..models.rrce_model import RRCEModel
-from .system_state import SystemState
+from rrce_framework.core.utils.config import SimulationConfig
+from rrce_framework.core.models.rrce_model import RRCEModel
+from rrce_framework.core.mathematics.resource_dynamics import ResourceParameters
 
 logger = logging.getLogger(__name__)
 
@@ -301,3 +302,24 @@ class RRCESimulator:
             
         except Exception:
             return 0.5
+
+    def run(self, data: pd.DataFrame, num_periods: int) -> pd.DataFrame:
+        logging.info("Starting RRCE simulation")
+        
+        # Convert resource parameter dicts to ResourceParameters objects
+        resource_params_dict = self.config.get('resource_params', {})
+        resource_params = {
+            name: ResourceParameters(**params) 
+            for name, params in resource_params_dict.items()
+        }
+        
+        initial_state = self.model.prepare_initial_state(data)
+        
+        predictions = self.model.predict(
+            initial_state=initial_state,
+            num_periods=num_periods,
+            resource_params=resource_params
+        )
+        
+        logging.info("RRCE simulation completed successfully")
+        return predictions

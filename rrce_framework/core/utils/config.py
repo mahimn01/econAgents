@@ -57,6 +57,7 @@ class ModelConfig:
     pricing: Dict[str, Any] = field(default_factory=dict)
     currency: Dict[str, Any] = field(default_factory=dict)
     equilibrium: Dict[str, Any] = field(default_factory=dict)
+    time_step: float = 0.25  # Quarterly time step
     
     def copy(self):
         """Return a copy of the configuration"""
@@ -69,6 +70,19 @@ class AnalysisConfig:
     conventional_models: list = field(default_factory=lambda: ["dsge", "var"])
     metrics: list = field(default_factory=lambda: ["rmse", "mae"])
     validation: Dict[str, Any] = field(default_factory=dict)
+    
+    # Add dictionary-like access methods
+    def get(self, key, default=None):
+        """Get attribute like a dictionary"""
+        return getattr(self, key, default)
+    
+    def __getitem__(self, key):
+        """Allow dictionary-style access"""
+        return getattr(self, key)
+    
+    def __setitem__(self, key, value):
+        """Allow dictionary-style assignment"""
+        setattr(self, key, value)
 
 @dataclass
 class LoggingConfig:
@@ -109,6 +123,19 @@ class VisualizationConfig:
     dpi: int = 300
     save_format: str = "png"
     interactive: bool = True
+    
+    # Add dictionary-like access methods
+    def get(self, key, default=None):
+        """Get attribute like a dictionary"""
+        return getattr(self, key, default)
+    
+    def __getitem__(self, key):
+        """Allow dictionary-style access"""
+        return getattr(self, key)
+    
+    def __setitem__(self, key, value):
+        """Allow dictionary-style assignment"""
+        setattr(self, key, value)
 
 class Config:
     """Main configuration class for RRCE Framework."""

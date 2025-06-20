@@ -9,6 +9,7 @@ import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
 
+from . import __version__
 from .core.utils.config import Config
 from .core.utils.logger import setup_logger
 from .core.data.collectors import RRCEDataManager, DataConfig
@@ -340,19 +341,15 @@ class RRCEFramework:
         
         logger.info(f"Creating visualizations for {country}")
         
-        # Prepare data for visualization
-        viz_data = {
-            'raw_data': self.processed_data.get(country),
-            'simulation_results': self.simulation_results.get(country),
-            'analysis_results': self.analysis_results.get(country),
-        }
-        
-        # Create visualizations
-        plots = self.visualizer.create_comprehensive_report(
-            country=country,
-            data=viz_data,
-            output_dir=output_dir
-        )
+        # Prepare simulation results for visualization
+        sim_results = self.simulation_results.get(country)
+        if sim_results is None:
+            raise ValueError(f"No simulation results available for {country}")
+        # Ensure country is included in results for dashboard
+        viz_input = sim_results.copy() if isinstance(sim_results, dict) else {**sim_results}
+        viz_input['country'] = country
+        # Create visualizations using existing dashboard method
+        plots = self.visualizer.create_dashboard(viz_input)
         
         logger.info(f"Visualizations created for {country}")
         return plots
@@ -395,14 +392,14 @@ class RRCEFramework:
                 
                 # Create visualizations
                 plots = self.visualize_results(country)
-                
+                 
                 # Compile results
                 results[country] = {
-                    'calibration': calibration,
-                    'simulation': simulation,
-                    'comparison': comparison,
-                    'visualizations': plots,
-                }
+                     'calibration': calibration,
+                     'simulation': simulation,
+                     'comparison': comparison,
+                     'plots': plots
+                 }
                 
                 logger.info(f"Full analysis completed for {country}")
                 
