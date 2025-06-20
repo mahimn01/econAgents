@@ -29,6 +29,24 @@ class SimulationConfig:
     max_iterations: int = 1000
     convergence_tolerance: float = 1e-6
     solver: Dict[str, Any] = field(default_factory=dict)
+    
+    def copy(self):
+        """Return a copy of the configuration"""
+        import copy
+        return copy.deepcopy(self)
+    
+    # Add dictionary-like access methods
+    def get(self, key, default=None):
+        """Get attribute like a dictionary"""
+        return getattr(self, key, default)
+    
+    def __getitem__(self, key):
+        """Allow dictionary-style access"""
+        return getattr(self, key)
+    
+    def __setitem__(self, key, value):
+        """Allow dictionary-style assignment"""
+        setattr(self, key, value)
 
 @dataclass
 class ModelConfig:
@@ -36,6 +54,14 @@ class ModelConfig:
     resources: Dict[str, Any] = field(default_factory=dict)
     social: Dict[str, Any] = field(default_factory=dict)
     system: Dict[str, Any] = field(default_factory=dict)
+    pricing: Dict[str, Any] = field(default_factory=dict)
+    currency: Dict[str, Any] = field(default_factory=dict)
+    equilibrium: Dict[str, Any] = field(default_factory=dict)
+    
+    def copy(self):
+        """Return a copy of the configuration"""
+        import copy
+        return copy.deepcopy(self)
 
 @dataclass
 class AnalysisConfig:
