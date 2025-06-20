@@ -1,0 +1,16 @@
+# ignore ENV
+.env
+# ignore node_modules
+node_modules/
+# ignore build
+dist/
+# ignore logs
+logs/
+# ignore coverage
+coverage/
+# ignore temporary files
+*.tmp
+# ignore IDE specific files
+.idea/
+# ignore OS specific files
+.DS_Store  
