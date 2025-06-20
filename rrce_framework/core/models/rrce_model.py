@@ -113,29 +113,46 @@ class RRCEModel:
         # Parse and convert resource parameters
         raw_resources = config_dict.get('resources', default_resources)
         parsed_resources: Dict[str, ResourceParameters] = {}
+        # Instantiate ResourceParameters with only valid fields
+        valid_r_keys = set(ResourceParameters.__dataclass_fields__.keys())
         for name, rp in raw_resources.items():
             if isinstance(rp, ResourceParameters):
                 parsed_resources[name] = rp
             elif isinstance(rp, dict):
-                parsed_resources[name] = ResourceParameters(**rp)
+                # Filter only valid keys
+                rp_clean = {k: v for k, v in rp.items() if k in valid_r_keys}
+                parsed_resources[name] = ResourceParameters(**rp_clean)
             else:
                 parsed_resources[name] = rp  # assume already correct type
         # Parse and convert pricing parameters
         raw_pricing = config_dict.get('pricing', default_pricing)
         parsed_pricing: Dict[str, PricingParameters] = {}
+        # Instantiate PricingParameters with only valid fields
+        valid_p_keys = set(PricingParameters.__dataclass_fields__.keys())
         for name, pp in raw_pricing.items():
             if isinstance(pp, PricingParameters):
                 parsed_pricing[name] = pp
             elif isinstance(pp, dict):
-                parsed_pricing[name] = PricingParameters(**pp)
+                pp_clean = {k: v for k, v in pp.items() if k in valid_p_keys}
+                parsed_pricing[name] = PricingParameters(**pp_clean)
             else:
                 parsed_pricing[name] = pp
         
+        # Instantiate CurrencyParameters filtering valid keys
+        valid_c_keys = set(CurrencyParameters.__dataclass_fields__.keys())
+        raw_currency = config_dict.get('currency', {}) or {}
+        currency_clean = {k: v for k, v in raw_currency.items() if k in valid_c_keys}
+        currency_params = CurrencyParameters(**currency_clean)
+        # Instantiate EquilibriumParameters filtering valid keys
+        valid_e_keys = set(EquilibriumParameters.__dataclass_fields__.keys())
+        raw_equil = config_dict.get('equilibrium', {}) or {}
+        equil_clean = {k: v for k, v in raw_equil.items() if k in valid_e_keys}
+        equilibrium_params = EquilibriumParameters(**equil_clean)
         return RRCEModelConfig(
             resources=parsed_resources,
             pricing=parsed_pricing,
-            currency=CurrencyParameters(**config_dict.get('currency', {})),
-            equilibrium=EquilibriumParameters(**config_dict.get('equilibrium', {})),
+            currency=currency_params,
+            equilibrium=equilibrium_params,
             time_step=config_dict.get('time_step', 0.25),
             convergence_tolerance=config_dict.get('convergence_tolerance', 1e-6),
             max_iterations=config_dict.get('max_iterations', 1000)

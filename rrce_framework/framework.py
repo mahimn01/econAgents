@@ -183,15 +183,20 @@ class RRCEFramework:
         logger.info("Setting up RRCE model")
         
         # Merge config parameters with provided parameters
-        params = self.config.model.copy()
+        model_config = self.config.model.copy()
         if model_params:
-            params.update(model_params)
-        
-        # Initialize model
-        self.model = RRCEModel(params)
-        
+            # Update underlying dict of model_config if update method exists
+            if hasattr(model_config, 'update'):
+                model_config.update(model_params)
+            else:
+                for k, v in model_params.items():
+                    setattr(model_config, k, v)
+        # Initialize model with plain dict to ensure correct parsing
+        self.model = RRCEModel(model_config.__dict__)
+         
         # Initialize simulator
         sim_config = self.config.simulation.copy()
+        # Simulation config supports dict-like access
         self.simulator = RRCESimulator(self.model, sim_config)
         
         logger.info("RRCE model setup completed")

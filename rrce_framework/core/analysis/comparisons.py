@@ -201,16 +201,13 @@ class ModelComparison:
     def _compute_metrics(self, actual: pd.Series, predicted: pd.Series) -> Dict[str, float]:
         """Compute accuracy metrics."""
         try:
-            # Align series
-            min_len = min(len(actual), len(predicted))
-            actual = actual.iloc[:min_len]
-            predicted = predicted.iloc[:min_len]
-            
+            # Align series by index to ensure matching labels
+            actual, predicted = actual.align(predicted, join='inner')
             # Remove any NaN values
             mask = ~(actual.isna() | predicted.isna())
             actual = actual[mask]
             predicted = predicted[mask]
-            
+             
             if len(actual) == 0:
                 return {'error': 'No valid data points for comparison'}
             
@@ -226,18 +223,20 @@ class ModelComparison:
                 metrics['mae'] = np.mean(np.abs(actual - predicted))
             
             # Mean Absolute Percentage Error
-            if 'mape' in self.metrics and not np.any(actual == 0):
-                metrics['mape'] = np.mean(np.abs((actual - predicted) / actual)) * 100
+            if 'mape' in self.metrics:
+                # Avoid division by zero
+                nonzero = actual != 0
+                if nonzero.any():
+                    metrics['mape'] = np.mean(np.abs((actual[nonzero] - predicted[nonzero]) / actual[nonzero])) * 100
             
             # Directional Accuracy
             if 'directional_accuracy' in self.metrics and len(actual) > 1:
                 actual_direction = np.sign(actual.diff().dropna())
                 predicted_direction = np.sign(predicted.diff().dropna())
-                min_len = min(len(actual_direction), len(predicted_direction))
-                if min_len > 0:
-                    metrics['directional_accuracy'] = np.mean(
-                        actual_direction.iloc[:min_len] == predicted_direction.iloc[:min_len]
-                    )
+                # Align directional series
+                actual_direction, predicted_direction = actual_direction.align(predicted_direction, join='inner')
+                if len(actual_direction) > 0:
+                    metrics['directional_accuracy'] = np.mean(actual_direction == predicted_direction)
             
             # R-squared
             if len(actual) > 1:
