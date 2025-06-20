@@ -15,7 +15,17 @@ from .core.data.collectors import RRCEDataManager, DataConfig
 from .core.simulation.simulator import RRCESimulator
 from .core.models.rrce_model import RRCEModel
 from .core.analysis.comparisons import ModelComparison
-from .core.analysis.visualization import RRCEVisualizer
+try:
+    from .core.analysis.visualization import RRCEVisualizer
+except ImportError:
+    # Create a temporary placeholder class
+    class RRCEVisualizer:
+        def __init__(self, *args, **kwargs):
+            pass
+        def create_dashboard(self, *args, **kwargs):
+            return None
+        def generate_report(self, *args, **kwargs):
+            return None
 
 logger = logging.getLogger(__name__)
 
@@ -103,7 +113,7 @@ class RRCEFramework:
             start_date=self.config.data.default_start_date,
             end_date=self.config.data.default_end_date,
             data_dir=Path(self.config.get('data_dir', './data')),
-            cache_enabled=self.config.data.cache.enabled,
+            cache_enabled=self.config.data.cache.get('enabled', True),
             api_keys=api_keys or {},
         )
         

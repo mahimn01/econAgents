@@ -53,6 +53,28 @@ class LoggingConfig:
     max_file_size_mb: int = 10
     backup_count: int = 5
 
+    # Add dictionary-like access methods
+    def get(self, key, default=None):
+        """Get attribute like a dictionary"""
+        return getattr(self, key, default)
+    
+    def __getitem__(self, key):
+        """Allow dictionary-style access"""
+        return getattr(self, key)
+    
+    def __setitem__(self, key, value):
+        """Allow dictionary-style assignment"""
+        setattr(self, key, value)
+    
+    def keys(self):
+        """Return attribute names"""
+        return [attr for attr in dir(self) if not attr.startswith('_') and not callable(getattr(self, attr))]
+    
+    def items(self):
+        """Return key-value pairs"""
+        return [(key, getattr(self, key)) for key in self.keys()]
+
+
 @dataclass
 class VisualizationConfig:
     """Visualization configuration."""
